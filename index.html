@@ -4,64 +4,60 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PikaTopUp ⚡</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700&family=Tenor+Sans&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Orbitron:wght@700;900&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --gold:      #D4A843;
-  --gold-hi:   #F0CC72;
-  --gold-lo:   #8A6820;
-  --gold-glow: rgba(212,168,67,0.18);
-  --bg:        #07070C;
-  --s1:        #0C0C14;
-  --s2:        #111119;
-  --bdr:       rgba(212,168,67,0.18);
-  --bdr-hi:    rgba(212,168,67,0.40);
-  --text:      #F0E8D0;
-  --muted:     #4A4A62;
-  --green:     #22C55E;
+  --tq1:   #00C9B8;   /* bright turquoise */
+  --tq2:   #00A896;   /* mid turquoise */
+  --tq3:   #007A6E;   /* deep turquoise */
+  --tq4:   #E0FAF8;   /* light turquoise tint */
+  --bg:    #080808;   /* turquoise background */
+  --s1:    #003D38;   /* near black cards */
+  --s2:    #004D46;   /* slightly lighter black */
+  --s3:    #005E56;   /* dark grey hover */
+  --bdr:   rgba(0,0,0,0.35);
+  --bdr-hi:rgba(0,0,0,0.70);
+  --text:  #E0FAF8;
+  --text2: #B0F0EC;
+  --muted: #005F56;
+  --green: #22C55E;
 }
 
 html { scroll-behavior: smooth; }
 
 body {
   min-height: 100vh;
-  background: var(--bg);
+  background: #080808;
   font-family: 'Jost', sans-serif;
   color: var(--text);
-  display: flex;
-  flex-direction: column;
+  display: flex; flex-direction: column;
   align-items: center;
   padding: 0 0 80px;
   overflow-x: hidden;
-  cursor: default;
 }
 
-/* ── HERO BG ── */
-.hero-bg {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  height: 50vh;
-  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(212,168,67,0.13) 0%, transparent 70%);
+/* turquoise gradient depth */
+.bg-layer {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, #0A0A0A 0%, #080808 40%, #050505 100%);
   pointer-events: none; z-index: 0;
 }
 
-/* grain overlay */
-.grain {
-  position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23f)' opacity='0.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 0; opacity: 0.6;
+/* dark wave at bottom */
+.bg-wave {
+  position: fixed; bottom: -5%; left: 50%; transform: translateX(-50%);
+  width: 800px; height: 300px;
+  background: radial-gradient(ellipse, rgba(0,200,185,0.10) 0%, transparent 70%);
+  pointer-events: none; z-index: 0;
 }
 
-/* diagonal stripe texture */
-.stripes {
+/* dot pattern */
+.dots {
   position: fixed; inset: 0;
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0px, transparent 40px,
-    rgba(212,168,67,0.012) 40px, rgba(212,168,67,0.012) 41px
-  );
+  background-image: radial-gradient(circle, rgba(0,200,185,0.12) 1px, transparent 1px);
+  background-size: 22px 22px;
   pointer-events: none; z-index: 0;
 }
 
@@ -69,367 +65,326 @@ body {
   position: relative; z-index: 1;
   width: 100%; max-width: 440px;
   padding: 0 20px;
-  display: flex; flex-direction: column;
-  align-items: center;
+  display: flex; flex-direction: column; align-items: center;
 }
 
-/* ══════════════════════
-   PROFILE HEADER
-══════════════════════ */
+/* ══ PROFILE ══ */
 .profile {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 0;
-  padding: 56px 0 36px;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 52px 0 34px;
   animation: rise 0.8s cubic-bezier(0.16,1,0.3,1) both;
 }
 
 .avatar-wrap {
-  position: relative;
-  width: 90px; height: 90px;
-  margin-bottom: 20px;
+  position: relative; width: 90px; height: 90px; margin-bottom: 20px;
 }
-
 .avatar-ring {
-  position: absolute; inset: -4px;
-  border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--gold-lo), var(--gold), var(--gold-hi), var(--gold), var(--gold-lo), var(--gold-lo));
-  animation: spin 8s linear infinite;
-  opacity: 0.7;
+  position: absolute; inset: -4px; border-radius: 50%;
+  background: conic-gradient(from 0deg, #003D38, #007A6E, #00A896, #00C9B8, #00DDD0, #00C9B8, #00A896, #007A6E, #003D38);
+  animation: spin 6s linear infinite;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
-
 .avatar-ring-inner {
-  position: absolute; inset: 2px;
-  border-radius: 50%;
-  background: var(--bg);
+  position: absolute; inset: 2px; border-radius: 50%;
+  background: #080808;
 }
-
 .avatar {
   position: relative; z-index: 1;
-  width: 90px; height: 90px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #201C0E, #08080F);
-  border: 1px solid var(--bdr);
+  width: 90px; height: 90px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #00A896, #007A6E);
+  border: 2px solid rgba(0,0,0,0.5);
   display: flex; align-items: center; justify-content: center;
   font-size: 38px;
-  filter: drop-shadow(0 0 20px rgba(212,168,67,0.4));
-  animation: pulse 3s ease-in-out infinite;
+  animation: glow 3s ease-in-out infinite;
 }
-@keyframes pulse {
-  0%,100% { filter: drop-shadow(0 0 16px rgba(212,168,67,0.35)); }
-  50%      { filter: drop-shadow(0 0 30px rgba(212,168,67,0.65)); }
+@keyframes glow {
+  0%,100% { box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+  50%      { box-shadow: 0 4px 40px rgba(0,0,0,0.7); }
 }
 
 .name {
-  font-family: 'Playfair Display', serif;
-  font-size: 30px; font-weight: 800;
-  letter-spacing: 1px;
-  background: linear-gradient(160deg, var(--gold-lo) 0%, var(--gold) 30%, var(--gold-hi) 55%, var(--gold) 75%, var(--gold-lo) 100%);
+  font-family: 'Orbitron', monospace;
+  font-size: 24px; font-weight: 900; letter-spacing: 3px;
+  background: linear-gradient(135deg, #000 0%, #1A1A1A 30%, #333 55%, #1A1A1A 80%, #000 100%);
   -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   text-align: center; margin-bottom: 6px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.brand {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 4px;
+}
+.brand-pika {
+  font-family: 'Orbitron', monospace;
+  font-size: 26px; font-weight: 900; letter-spacing: 4px;
+  background: linear-gradient(135deg, #003D38 0%, #00A896 50%, #00C9B8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.brand-dot {
+  font-size: 13px; color: var(--tq1);
+  filter: drop-shadow(0 0 6px rgba(0,200,185,0.8));
+  animation: twinkle 2s ease-in-out infinite;
+}
+@keyframes twinkle {
+  0%,100% { opacity:1; transform: scale(1); }
+  50%      { opacity:0.4; transform: scale(0.7); }
+}
+.brand-topup {
+  font-family: 'Orbitron', monospace;
+  font-size: 26px; font-weight: 900; letter-spacing: 4px;
+  background: linear-gradient(135deg, #003D38 0%, #00A896 50%, #00C9B8 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+.brand-sub {
+  font-family: 'Orbitron', monospace;
+  font-size: 12px; font-weight: 900; letter-spacing: 3px;
+  color: var(--tq1); margin-bottom: 6px;
+  text-transform: uppercase;
+  border: 2px solid #000;
+  padding: 4px 16px;
+  background: rgba(0,0,0,0.07);
 }
 
 .tagline {
-  font-family: 'Tenor Sans', serif;
-  font-size: 11px; letter-spacing: 4px;
-  text-transform: uppercase; color: var(--muted);
-  margin-bottom: 22px;
+  font-family: 'Rajdhani', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 4px; text-transform: uppercase; color: rgba(0,200,185,0.7); margin-bottom: 22px;
 }
 
-.pill-row {
-  display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-}
+.pill-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .pill {
-  font-family: 'Jost', sans-serif;
-  font-size: 9px; font-weight: 500; letter-spacing: 2.5px;
-  text-transform: uppercase; color: var(--gold);
-  padding: 5px 14px;
-  border: 1px solid var(--bdr);
-  background: rgba(212,168,67,0.06);
+  font-family: 'Rajdhani', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase; color: var(--tq1);
+  padding: 5px 14px; border: 1px solid rgba(0,200,185,0.45);
+  background: rgba(0,200,185,0.10);
   position: relative; overflow: hidden;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
 }
 .pill::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(212,168,67,0.08), transparent);
-  transform: translateX(-100%);
-  animation: sheen 4s ease-in-out infinite;
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+  transform: translateX(-100%); animation: sheen 4s ease-in-out infinite;
 }
-.pill:nth-child(2)::before { animation-delay: 0.5s; }
-.pill:nth-child(3)::before { animation-delay: 1s; }
-@keyframes sheen { 0%,70%,100% { transform: translateX(-100%); } 40% { transform: translateX(100%); } }
+.pill:nth-child(2)::before { animation-delay: 0.7s; }
+.pill:nth-child(3)::before { animation-delay: 1.4s; }
+@keyframes sheen { 0%,70%,100%{ transform: translateX(-100%); } 40%{ transform: translateX(100%); } }
 
 /* ── DIVIDER ── */
 .divider {
-  width: 100%;
-  display: flex; align-items: center; gap: 12px;
-  margin: 4px 0 16px;
-  animation: rise 0.6s both;
+  width: 100%; display: flex; align-items: center; gap: 12px; margin: 4px 0 16px;
 }
-.div-line { flex:1; height: 1px; background: linear-gradient(90deg, transparent, var(--bdr), transparent); }
+.div-line { flex:1; height: 1px; background: linear-gradient(90deg, transparent, rgba(0,200,185,0.35), transparent); }
 .div-gem {
-  width: 7px; height: 7px;
-  background: var(--gold); transform: rotate(45deg);
-  opacity: 0.5; flex-shrink: 0;
-  box-shadow: 0 0 8px rgba(212,168,67,0.4);
+  width: 7px; height: 7px; background: var(--tq1);
+  transform: rotate(45deg); flex-shrink: 0;
+  box-shadow: 0 0 10px rgba(0,0,0,0.4);
 }
 
 /* ── SECTION LABEL ── */
 .sec-label {
-  width: 100%;
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 10px;
-  animation: rise 0.6s both;
+  width: 100%; display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
 }
 .sec-label span {
-  font-family: 'Tenor Sans', serif;
-  font-size: 9px; letter-spacing: 4px;
-  text-transform: uppercase; color: var(--gold);
-  opacity: 0.5; white-space: nowrap;
+  font-family: 'Rajdhani', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase; color: var(--tq1); opacity: 0.85; white-space: nowrap;
 }
-.sec-label-line { flex:1; height: 1px; background: linear-gradient(90deg, var(--bdr), transparent); }
+.sec-label-line { flex:1; height: 1px; background: linear-gradient(90deg, rgba(0,200,185,0.3), transparent); }
 
 /* ── LINK BUTTON ── */
+/* multi admin button */
+.btn-multi { display:none; }
 .btn {
-  width: 100%;
-  display: flex; align-items: center; gap: 14px;
-  padding: 15px 18px;
-  background: linear-gradient(135deg, var(--s1) 0%, var(--s2) 100%);
-  border: 1px solid var(--bdr);
-  text-decoration: none; color: var(--text);
+  width: 100%; display: flex; align-items: center; gap: 14px;
+  padding: 14px 18px; background: var(--s1);
+  border: 1px solid rgba(0,200,185,0.20);
+  text-decoration: none; color: var(--text2);
   transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
   position: relative; overflow: hidden;
-  margin-bottom: 9px;
-  animation: rise 0.6s both;
+  margin-bottom: 9px; animation: rise 0.6s both;
+  clip-path: polygon(10px 0%, 100% 0%, calc(100% - 10px) 100%, 0% 100%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
 }
-
-/* shimmer on hover */
 .btn::after {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(105deg, transparent 40%, rgba(212,168,67,0.07) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform 0.5s ease;
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(0,200,185,0.08) 50%, transparent 60%);
+  transform: translateX(-100%); transition: transform 0.5s ease;
 }
 .btn:hover::after { transform: translateX(100%); }
-
-/* left gold bar */
 .btn::before {
-  content: '';
-  position: absolute; left: 0; top: 10%; bottom: 10%; width: 2px;
-  background: linear-gradient(180deg, transparent, var(--gold), transparent);
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: linear-gradient(180deg, var(--tq3), var(--tq1), var(--tq3));
   opacity: 0; transition: opacity 0.3s;
 }
 .btn:hover::before { opacity: 1; }
 .btn:hover {
-  border-color: var(--bdr-hi);
-  background: linear-gradient(135deg, #131320 0%, #1A1A28 100%);
-  transform: translateX(6px) scale(1.005);
-  box-shadow: -6px 0 24px rgba(212,168,67,0.06), 0 8px 32px rgba(0,0,0,0.5);
+  border-color: rgba(0,200,185,0.45); background: var(--s2);
+  transform: translateX(6px);
+  box-shadow: -4px 0 20px rgba(0,200,185,0.15), 0 8px 32px rgba(0,0,0,0.5);
 }
 
 .btn-icon {
   width: 40px; height: 40px; flex-shrink: 0;
-  background: rgba(212,168,67,0.06);
-  border: 1px solid var(--bdr);
+  background: rgba(0,200,185,0.10); border: 1px solid rgba(0,200,185,0.18);
   display: flex; align-items: center; justify-content: center;
-  font-size: 18px;
-  transition: border-color 0.3s, background 0.3s;
+  font-size: 18px; transition: all 0.3s;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
 }
-.btn:hover .btn-icon {
-  border-color: var(--bdr-hi);
-  background: rgba(212,168,67,0.1);
-}
+.btn:hover .btn-icon { border-color: rgba(0,200,185,0.40); background: rgba(0,200,185,0.18); }
 
 .btn-body { flex: 1; min-width: 0; }
 .btn-label {
-  font-family: 'Tenor Sans', serif;
-  font-size: 13px; letter-spacing: 0.5px;
-  color: var(--text);
+  font-family: 'Rajdhani', sans-serif; font-size: 14px; font-weight: 700;
+  letter-spacing: 0.5px; color: var(--text2);
 }
-.btn-sub {
-  font-size: 10.5px; color: var(--muted);
-  margin-top: 3px; font-weight: 300; letter-spacing: 0.3px;
-}
-
+.btn-sub { font-size: 10.5px; color: #3A6660; margin-top: 2px; font-weight: 300; }
 .btn-arrow {
-  font-size: 22px; color: var(--muted); flex-shrink: 0;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Orbitron', monospace; font-size: 14px; color: #3A6660; flex-shrink: 0;
   transition: transform 0.3s, color 0.3s;
-  line-height: 1;
 }
-.btn:hover .btn-arrow { transform: translateX(5px); color: var(--gold); }
+.btn:hover .btn-arrow { transform: translateX(5px); color: var(--tq1); }
 
-/* ── ADMIN GRID ── */
+/* ── ADMINS ── */
 .admins {
-  width: 100%;
-  display: grid; grid-template-columns: 1fr 1fr 1fr;
-  gap: 9px;
-  animation: rise 0.6s both;
+  width: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 9px; animation: rise 0.6s both;
 }
-
 .admin {
-  display: flex; flex-direction: column;
-  align-items: center; gap: 9px;
-  padding: 20px 12px 16px;
-  background: linear-gradient(160deg, var(--s1), var(--s2));
-  border: 1px solid var(--bdr);
-  text-decoration: none; color: var(--text);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  padding: 18px 10px 14px; background: var(--s1);
+  border: 1px solid rgba(0,200,185,0.18);
+  text-decoration: none; color: var(--text2);
   transition: all 0.3s cubic-bezier(0.16,1,0.3,1);
   position: relative; overflow: hidden;
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.35);
 }
 .admin::before {
-  content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-hi), transparent);
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tq1), transparent);
   opacity: 0; transition: opacity 0.3s;
 }
-.admin:hover::before { opacity: 0.6; }
+.admin:hover::before { opacity: 1; }
 .admin:hover {
-  border-color: rgba(34,197,94,0.3);
-  background: linear-gradient(160deg, #111120, #181826);
+  border-color: rgba(0,200,185,0.40); background: var(--s2);
   transform: translateY(-4px);
-  box-shadow: 0 20px 48px rgba(0,0,0,0.6), 0 0 20px rgba(34,197,94,0.05);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(0,200,185,0.10);
 }
 
 .admin-badge {
-  width: 46px; height: 46px;
-  background: radial-gradient(circle at 30% 30%, #1E1C0C, #0A0A0E);
-  border: 1px solid var(--bdr);
+  width: 42px; height: 42px; background: var(--s3);
+  border: 1px solid rgba(0,200,185,0.18);
   display: flex; align-items: center; justify-content: center;
+  clip-path: polygon(4px 0%, 100% 0%, calc(100% - 4px) 100%, 0% 100%);
   position: relative;
 }
 .admin-badge::before {
-  content: ''; position: absolute; inset: 4px;
-  border: 1px solid rgba(212,168,67,0.1);
+  content: ''; position: absolute; inset: 4px; border: 1px solid rgba(0,200,185,0.10);
 }
 .admin-initial {
-  font-family: 'Playfair Display', serif;
-  font-size: 14px; font-weight: 700; color: var(--gold);
+  font-family: 'Orbitron', monospace; font-size: 11px; font-weight: 700; color: var(--tq1);
 }
-
 .admin-role {
-  font-family: 'Tenor Sans', serif;
-  font-size: 8.5px; letter-spacing: 3px;
-  text-transform: uppercase; color: var(--muted);
-  text-align: center;
+  font-family: 'Rajdhani', sans-serif; font-size: 8px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase; color: var(--tq2); opacity: 0.8; text-align: center;
 }
-.admin-num {
-  font-size: 11.5px; font-weight: 400;
-  color: var(--text); text-align: center;
-  letter-spacing: 0.3px;
-}
+.admin-num { font-size: 10.5px; font-weight: 400; color: var(--text2); text-align: center; }
 .admin-chat {
-  font-size: 8.5px; font-weight: 500; letter-spacing: 1.5px;
-  text-transform: uppercase; color: var(--green);
-  background: rgba(34,197,94,0.07);
-  border: 1px solid rgba(34,197,94,0.2);
-  padding: 3px 10px;
+  font-family: 'Rajdhani', sans-serif; font-size: 8.5px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--green);
+  background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); padding: 3px 8px;
 }
-
-.admin.wide {
-  grid-column: 1/-1;
-  flex-direction: row; gap: 14px;
-  padding: 14px 20px;
-}
-.admin.wide .admin-role,
-.admin.wide .admin-num { text-align: left; }
 
 /* ── FOOTER ── */
 .footer {
-  width: 100%;
-  margin-top: 8px;
-  padding: 24px 20px 28px;
-  text-align: center;
-  border: 1px solid var(--bdr);
-  background: linear-gradient(170deg, var(--s1), var(--bg));
-  position: relative; overflow: hidden;
-  animation: rise 0.6s both;
+  width: 100%; margin-top: 8px; padding: 22px 20px 28px;
+  text-align: center; border: 1px solid rgba(0,200,185,0.18);
+  background: var(--s1); position: relative; overflow: hidden;
+  animation: rise 0.6s both; box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%);
 }
 .footer::before {
-  content: '';
-  position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0.5;
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tq2), var(--tq1), var(--tq2), transparent);
+}
+.footer::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--tq3), var(--tq2), var(--tq3), transparent);
 }
 
-/* footer corner marks */
-.fc { position: absolute; width: 14px; height: 14px; }
-.fc.tl { top:10px; left:10px; border-top:1px solid var(--gold); border-left:1px solid var(--gold); opacity:0.4; }
-.fc.tr { top:10px; right:10px; border-top:1px solid var(--gold); border-right:1px solid var(--gold); opacity:0.4; }
-.fc.bl { bottom:10px; left:10px; border-bottom:1px solid var(--gold); border-left:1px solid var(--gold); opacity:0.4; }
-.fc.br { bottom:10px; right:10px; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); opacity:0.4; }
+.fc { position: absolute; width: 12px; height: 12px; }
+.fc.tl { top:8px; left:8px; border-top:1px solid var(--tq2); border-left:1px solid var(--tq2); opacity:0.5; }
+.fc.tr { top:8px; right:8px; border-top:1px solid var(--tq2); border-right:1px solid var(--tq2); opacity:0.5; }
+.fc.bl { bottom:8px; left:8px; border-bottom:1px solid var(--tq2); border-left:1px solid var(--tq2); opacity:0.5; }
+.fc.br { bottom:8px; right:8px; border-bottom:1px solid var(--tq2); border-right:1px solid var(--tq2); opacity:0.5; }
 
 .footer-quote {
-  font-family: 'Playfair Display', serif;
-  font-style: italic; font-size: 14px;
-  color: var(--muted); letter-spacing: 0.5px;
-  margin-bottom: 16px;
+  font-family: 'Rajdhani', sans-serif; font-size: 13px; font-weight: 600;
+  letter-spacing: 1px; color: #3A6660; margin-bottom: 14px; font-style: italic;
 }
-.footer-gems {
-  display: flex; align-items: center; justify-content: center; gap: 16px;
-}
+.footer-gems { display: flex; align-items: center; justify-content: center; gap: 14px; }
 .footer-word {
-  font-family: 'Tenor Sans', serif;
-  font-size: 9.5px; letter-spacing: 4px;
-  text-transform: uppercase; color: var(--gold); opacity: 0.65;
+  font-family: 'Orbitron', monospace; font-size: 9px; font-weight: 700;
+  letter-spacing: 3px; color: var(--tq1); opacity: 0.85;
 }
-.gem {
-  width: 4px; height: 4px;
-  background: var(--gold); transform: rotate(45deg); opacity: 0.3;
-}
+.gem { width: 4px; height: 4px; background: var(--tq1); transform: rotate(45deg); opacity: 0.6; box-shadow: 0 0 5px rgba(0,200,185,0.5); }
 
 /* ── ANIMATIONS ── */
 @keyframes rise {
   from { opacity:0; transform: translateY(20px); }
   to   { opacity:1; transform: translateY(0); }
 }
-
-.profile     { animation-delay: 0s; }
-.divider     { animation-delay: 0.2s; }
-
-/* services */
-.sec-label:nth-of-type(1) { animation-delay: 0.25s; }
-.btn:nth-child(1)  { animation-delay: 0.30s; }
-.btn:nth-child(2)  { animation-delay: 0.35s; }
-.btn:nth-child(3)  { animation-delay: 0.40s; }
-.btn:nth-child(4)  { animation-delay: 0.45s; }
-.btn:nth-child(5)  { animation-delay: 0.50s; }
-
-/* social */
-.sec-label:nth-of-type(2) { animation-delay: 0.52s; }
-.btn:nth-child(6)  { animation-delay: 0.56s; }
-.btn:nth-child(7)  { animation-delay: 0.60s; }
-.btn:nth-child(8)  { animation-delay: 0.64s; }
-
-/* admins */
-.sec-label:nth-of-type(3) { animation-delay: 0.66s; }
-.admins  { animation-delay: 0.70s; }
-.footer  { animation-delay: 0.76s; }
+.profile { animation-delay: 0.0s; }
+.btn:nth-child(1) { animation-delay: 0.28s; }
+.btn:nth-child(2) { animation-delay: 0.33s; }
+.btn:nth-child(3) { animation-delay: 0.38s; }
+.btn:nth-child(4) { animation-delay: 0.43s; }
+.btn:nth-child(5) { animation-delay: 0.48s; }
+.btn:nth-child(6) { animation-delay: 0.53s; }
+.btn:nth-child(7) { animation-delay: 0.58s; }
+.btn:nth-child(8) { animation-delay: 0.63s; }
+.admins { animation-delay: 0.68s; }
+.footer { animation-delay: 0.74s; }
 
 @media (max-width: 380px) {
-  .admins { grid-template-columns: 1fr; }
-  .name { font-size: 26px; }
+  .admins { grid-template-columns: 1fr 1fr; }
+  .name { font-size: 20px; }
 }
 </style>
 </head>
 <body>
 
-<div class="hero-bg"></div>
-<div class="grain"></div>
-<div class="stripes"></div>
+<div class="bg-layer"></div>
+<div class="bg-wave"></div>
+<div class="dots"></div>
 
 <div class="page">
 
-  <!-- PROFILE -->
   <div class="profile">
     <div class="avatar-wrap">
       <div class="avatar-ring"></div>
       <div class="avatar-ring-inner"></div>
-      <div class="avatar">⚡</div>
+      <div class="avatar">
+        <svg width="52" height="52" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="30,4 14,28 24,28 22,48 38,24 28,24" fill="url(#lgb)" filter="url(#glowb)"/>
+          <defs>
+            <linearGradient id="lgb" x1="14" y1="4" x2="38" y2="48" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#111111"/>
+              <stop offset="50%" stop-color="#000000"/>
+              <stop offset="100%" stop-color="#222222"/>
+            </linearGradient>
+            <filter id="glowb" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="1.5" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+        </svg>
+      </div>
     </div>
-    <div class="name">PikaTopUp</div>
+    <div class="brand">
+      <span class="brand-pika">PIKA</span><span class="brand-dot">✦</span><span class="brand-topup">TOPUP</span>
+    </div>
     <div class="tagline">Your One-Stop Digital Hub</div>
     <div class="pill-row">
       <span class="pill">⚡ Instant</span>
@@ -438,97 +393,61 @@ body {
     </div>
   </div>
 
-  <div class="divider">
-    <div class="div-line"></div>
-    <div class="div-gem"></div>
-    <div class="div-line"></div>
-  </div>
-
-  <!-- SERVICES -->
+  <div class="divider"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
   <div class="sec-label"><span>Our Services</span><div class="sec-label-line"></div></div>
 
-  <a class="btn" href="https://wa.me/919321434524?text=Hi%20PikaTopUp%2C%20I%20want%20a%20Game%20Top-Up!" target="_blank">
+  <div class="btn" onclick="openModal('Game Top-Ups','Hi%20PikaTopUp%2C%20I%20want%20a%20Game%20Top-Up!')" style="cursor:pointer;">
     <div class="btn-icon">💎</div>
-    <div class="btn-body">
-      <div class="btn-label">Game Top-Ups</div>
-      <div class="btn-sub">MLBB · BGMI · & more</div>
-    </div>
+    <div class="btn-body"><div class="btn-label">Game Top-Ups</div><div class="btn-sub">MLBB · BGMI · & more</div></div>
     <div class="btn-arrow">›</div>
-  </a>
-
-  <a class="btn" href="https://wa.me/919321434524?text=Hi%20PikaTopUp%2C%20I%20want%20an%20OTT%20subscription!" target="_blank">
-    <div class="btn-icon">📺</div>
-    <div class="btn-body">
-      <div class="btn-label">OTT Subscriptions</div>
-      <div class="btn-sub">Netflix · Prime · & more</div>
-    </div>
-    <div class="btn-arrow">›</div>
-  </a>
-
-  <a class="btn" href="https://wa.me/919321434524?text=Hi%20PikaTopUp%2C%20I%20need%20a%20Social%20Boost!" target="_blank">
-    <div class="btn-icon">🚀</div>
-    <div class="btn-body">
-      <div class="btn-label">Social Boost</div>
-      <div class="btn-sub">Followers · Likes · Views</div>
-    </div>
-    <div class="btn-arrow">›</div>
-  </a>
-
-  <a class="btn" href="https://wa.me/919321434524?text=Hi%20PikaTopUp%2C%20I%20want%20to%20buy%2Fsell%20an%20account!" target="_blank">
-    <div class="btn-icon">🔄</div>
-    <div class="btn-body">
-      <div class="btn-label">Account Buy / Sell</div>
-      <div class="btn-sub">Safe & trusted trades</div>
-    </div>
-    <div class="btn-arrow">›</div>
-  </a>
-
-  <a class="btn" href="https://wa.me/919321434524?text=Hi%20PikaTopUp%2C%20I%20need%20Rank%20Boosting!" target="_blank">
-    <div class="btn-icon">🏆</div>
-    <div class="btn-body">
-      <div class="btn-label">Rank Boosting</div>
-      <div class="btn-sub">Climb the leaderboard — fast</div>
-    </div>
-    <div class="btn-arrow">›</div>
-  </a>
-
-  <!-- SOCIAL -->
-  <div class="divider" style="margin-top:6px;">
-    <div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div>
   </div>
+
+  <div class="btn" onclick="openModal('OTT Subscriptions','Hi%20PikaTopUp%2C%20I%20want%20an%20OTT%20subscription!')" style="cursor:pointer;">
+    <div class="btn-icon">📺</div>
+    <div class="btn-body"><div class="btn-label">OTT Subscriptions</div><div class="btn-sub">Netflix · Prime · & more</div></div>
+    <div class="btn-arrow">›</div>
+  </div>
+
+  <div class="btn" onclick="openModal('Social Boost','Hi%20PikaTopUp%2C%20I%20need%20a%20Social%20Boost!')" style="cursor:pointer;">
+    <div class="btn-icon">🚀</div>
+    <div class="btn-body"><div class="btn-label">Social Boost</div><div class="btn-sub">Followers · Likes · Views</div></div>
+    <div class="btn-arrow">›</div>
+  </div>
+
+  <div class="btn" onclick="openModal('Account Buy / Sell','Hi%20PikaTopUp%2C%20I%20want%20to%20buy%2Fsell%20an%20account!')" style="cursor:pointer;">
+    <div class="btn-icon">🔄</div>
+    <div class="btn-body"><div class="btn-label">Account Buy / Sell</div><div class="btn-sub">Safe & trusted trades</div></div>
+    <div class="btn-arrow">›</div>
+  </div>
+
+  <div class="btn" onclick="openModal('Rank Boosting','Hi%20PikaTopUp%2C%20I%20need%20Rank%20Boosting!')" style="cursor:pointer;">
+    <div class="btn-icon">🏆</div>
+    <div class="btn-body"><div class="btn-label">Rank Boosting</div><div class="btn-sub">Climb the leaderboard — fast</div></div>
+    <div class="btn-arrow">›</div>
+  </div>
+
+  <div class="divider" style="margin-top:6px;"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
   <div class="sec-label"><span>Find Us Online</span><div class="sec-label-line"></div></div>
 
   <a class="btn" href="https://chat.whatsapp.com/LOjIxrWbqKm3kc8e8FIFKM?mode=gi_t" target="_blank">
     <div class="btn-icon">👥</div>
-    <div class="btn-body">
-      <div class="btn-label">WhatsApp Group</div>
-      <div class="btn-sub">Join our group</div>
-    </div>
+    <div class="btn-body"><div class="btn-label">WhatsApp Group</div><div class="btn-sub">Join our group</div></div>
     <div class="btn-arrow">›</div>
   </a>
 
   <a class="btn" href="https://whatsapp.com/channel/0029VbC6kgpF6smy0fh6m608" target="_blank">
     <div class="btn-icon">📣</div>
-    <div class="btn-body">
-      <div class="btn-label">WhatsApp Channel</div>
-      <div class="btn-sub">Follow for updates & offers</div>
-    </div>
+    <div class="btn-body"><div class="btn-label">WhatsApp Channel</div><div class="btn-sub">Follow for updates & offers</div></div>
     <div class="btn-arrow">›</div>
   </a>
 
   <a class="btn" href="https://www.instagram.com/pika_topup" target="_blank">
     <div class="btn-icon">📸</div>
-    <div class="btn-body">
-      <div class="btn-label">Instagram</div>
-      <div class="btn-sub">@pika_topup</div>
-    </div>
+    <div class="btn-body"><div class="btn-label">Instagram</div><div class="btn-sub">@pika_topup</div></div>
     <div class="btn-arrow">›</div>
   </a>
 
-  <!-- ADMINS -->
-  <div class="divider" style="margin-top:6px;">
-    <div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div>
-  </div>
+  <div class="divider" style="margin-top:6px;"><div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div></div>
   <div class="sec-label"><span>Contact Admins</span><div class="sec-label-line"></div></div>
 
   <div class="admins">
@@ -536,41 +455,81 @@ body {
       <div class="admin-badge"><span class="admin-initial">A1</span></div>
       <div class="admin-role">Admin 1</div>
       <div class="admin-num">+91 93214 34524</div>
-      <div class="admin-chat">💬 Chat Now</div>
+      <div class="admin-chat">💬 Chat</div>
     </a>
-
     <a class="admin" href="https://wa.me/918591019661?text=Hi%20PikaTopUp%2C%20I%20need%20help!" target="_blank">
       <div class="admin-badge"><span class="admin-initial">A2</span></div>
       <div class="admin-role">Admin 2</div>
       <div class="admin-num">+91 85910 19661</div>
-      <div class="admin-chat">💬 Chat Now</div>
+      <div class="admin-chat">💬 Chat</div>
     </a>
-
     <a class="admin" href="https://wa.me/917977338534?text=Hi%20PikaTopUp%2C%20I%20need%20help!" target="_blank">
       <div class="admin-badge"><span class="admin-initial">A3</span></div>
       <div class="admin-role">Admin 3</div>
       <div class="admin-num">+91 79773 38534</div>
-      <div class="admin-chat">💬 Chat Now</div>
+      <div class="admin-chat">💬 Chat</div>
     </a>
   </div>
 
-  <!-- FOOTER -->
   <div class="footer">
     <div class="fc tl"></div><div class="fc tr"></div>
     <div class="fc bl"></div><div class="fc br"></div>
     <div class="footer-quote">"Tell us what you need — we got you covered"</div>
-    <div class="divider" style="margin:0 auto 14px; max-width:160px;">
+    <div class="divider" style="margin: 0 auto 12px; max-width:140px;">
       <div class="div-line"></div><div class="div-gem"></div><div class="div-line"></div>
     </div>
     <div class="footer-gems">
-      <span class="footer-word">Fast</span>
-      <span class="gem"></span>
-      <span class="footer-word">Trusted</span>
-      <span class="gem"></span>
+      <span class="footer-word">Fast</span><span class="gem"></span>
+      <span class="footer-word">Trusted</span><span class="gem"></span>
       <span class="footer-word">Instant</span>
     </div>
   </div>
 
 </div>
+<!-- ADMIN MODAL -->
+<div id="adminModal" style="display:none; position:fixed; inset:0; z-index:999; align-items:center; justify-content:center;">
+  <div onclick="closeModal()" style="position:absolute; inset:0; background:rgba(0,0,0,0.65); backdrop-filter:blur(4px);"></div>
+  <div style="position:relative; z-index:1; background:#003D38; border:1px solid rgba(0,200,185,0.40); padding:28px 24px; width:300px; max-width:90vw; clip-path:polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%); animation: rise 0.3s ease both;">
+    <div style="position:absolute;top:8px;left:8px;width:10px;height:10px;border-top:1px solid #00C9B8;border-left:1px solid #00C9B8;opacity:0.6;"></div>
+    <div style="position:absolute;top:8px;right:8px;width:10px;height:10px;border-top:1px solid #00C9B8;border-right:1px solid #00C9B8;opacity:0.6;"></div>
+    <div style="position:absolute;bottom:8px;left:8px;width:10px;height:10px;border-bottom:1px solid #00C9B8;border-left:1px solid #00C9B8;opacity:0.6;"></div>
+    <div style="position:absolute;bottom:8px;right:8px;width:10px;height:10px;border-bottom:1px solid #00C9B8;border-right:1px solid #00C9B8;opacity:0.6;"></div>
+    <div id="modalTitle" style="font-family:'Rajdhani',sans-serif;font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:#00C9B8;opacity:0.7;margin-bottom:6px;"></div>
+    <div style="font-family:'Orbitron',monospace;font-size:15px;font-weight:700;color:#B0F0EC;margin-bottom:6px;">Choose an Admin</div>
+    <div style="font-size:11px;color:#3A9990;margin-bottom:20px;">Who would you like to contact?</div>
+    <a id="admin1Link" href="#" target="_blank" onclick="closeModal()"
+      style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0A0A0A;border:1px solid rgba(0,200,185,0.22);text-decoration:none;margin-bottom:10px;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.2s;">
+      <div style="width:36px;height:36px;background:rgba(0,200,185,0.10);border:1px solid rgba(0,200,185,0.22);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#B0F0EC;">Admin 1</div>
+        <div style="font-size:10px;color:#3A9990;margin-top:2px;">+91 93214 34524</div>
+      </div>
+      <div style="margin-left:auto;font-size:18px;color:#00C9B8;">›</div>
+    </a>
+    <a id="admin2Link" href="#" target="_blank" onclick="closeModal()"
+      style="display:flex;align-items:center;gap:12px;padding:12px 16px;background:#0A0A0A;border:1px solid rgba(0,200,185,0.22);text-decoration:none;clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);transition:all 0.2s;">
+      <div style="width:36px;height:36px;background:rgba(0,200,185,0.10);border:1px solid rgba(0,200,185,0.22);display:flex;align-items:center;justify-content:center;font-size:16px;">👤</div>
+      <div>
+        <div style="font-family:'Rajdhani',sans-serif;font-size:13px;font-weight:700;letter-spacing:0.5px;color:#B0F0EC;">Admin 2</div>
+        <div style="font-size:10px;color:#3A9990;margin-top:2px;">+91 85910 19661</div>
+      </div>
+      <div style="margin-left:auto;font-size:18px;color:#00C9B8;">›</div>
+    </a>
+    <button onclick="closeModal()" style="margin-top:16px;width:100%;padding:9px;background:transparent;border:1px solid rgba(0,200,185,0.20);color:#3A9990;font-family:'Rajdhani',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;cursor:pointer;">✕ CLOSE</button>
+  </div>
+</div>
+
+<script>
+function openModal(service, msg) {
+  document.getElementById('modalTitle').textContent = service;
+  document.getElementById('admin1Link').href = 'https://wa.me/919321434524?text=' + msg;
+  document.getElementById('admin2Link').href = 'https://wa.me/918591019661?text=' + msg;
+  const m = document.getElementById('adminModal');
+  m.style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('adminModal').style.display = 'none';
+}
+</script>
 </body>
 </html>
